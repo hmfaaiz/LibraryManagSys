@@ -43,39 +43,39 @@ const MemberSignup = async (req, res) => {
 
 const MemberSignin = async (req, res) => {
   try {
-  if (
-    req.body.email &&
-    validator.isEmail(req.body.email) &&
-    req.body.password
-  ) {
-    const userEmail = req.body.email;
-    const userPassword = req.body.password;
-    const finduser = await Member.findOne({ email: userEmail });
-    if (finduser) {
-      if (finduser.password == userPassword) {
-        const { email, name, ...other } = finduser;
-        const forToken = {
-          email,
-          name,
-
-          _id: finduser._id,
-        };
-        await GenerateToken(forToken, res);
+    if (
+      req.body.email &&
+      validator.isEmail(req.body.email) &&
+      req.body.password
+    ) {
+      const userEmail = req.body.email;
+      const userPassword = req.body.password;
+      const finduser = await Member.findOne({ email: userEmail });
+      if (finduser) {
+        if (finduser.password == userPassword) {
+          const { email, name, isAdmin, ...other } = finduser;
+          const forToken = {
+            email,
+            name,
+            isAdmin,
+            _id: finduser._id,
+          };
+          await GenerateToken(forToken, res);
+        } else {
+          return res
+            .status(404)
+            .json({ status: 404, message: "password is wrong" });
+        }
       } else {
         return res
           .status(404)
-          .json({ status: 404, message: "password is wrong" });
+          .json({ status: 404, message: "user does not exist" });
       }
     } else {
       return res
-        .status(404)
-        .json({ status: 404, message: "user does not exist" });
+        .status(400)
+        .json({ status: 400, message: "please enter your credentials" });
     }
-  } else {
-    return res
-      .status(400)
-      .json({ status: 400, message: "please enter your credentials" });
-  }
   } catch {
     return res.status(500).json({ status: 500, message: "Internal error" });
   }
@@ -88,7 +88,7 @@ const MemberProfile = async (req, res) => {
       if (finduser) {
         return res
           .status(200)
-          .json({ status: 200, message: "Admin profile", data: finduser });
+          .json({ status: 200, message: "Myprofile", data: finduser });
       } else {
         return res
           .status(404)
@@ -135,9 +135,76 @@ const UpdateMemberProfile = async (req, res) => {
   });
 };
 
+const DeleteMember = (req, res) => {
+  Authentication(req, res, async (user) => {
+    try {
+      if (!user.isAdmin) {
+        await Member.findOneAndDelete({ _id: user._id });
+        return res
+          .status(200)
+          .json({ status: 200, message: "You deleted your account" });
+      }
+      if (user.isAdmin && req.query.memberId) {
+   
+          const findMember = await Member.findOne({ _id: req.query.memberId });
+          if (findMember.isAdmin) {
+            return res
+              .status(200)
+              .json({
+                status: 200,
+                message: "You can't delete admin account",
+              });
+          }
+          const findMemberAcc = await Member.findOneAndDelete({
+            _id: req.query.memberId,
+          });
+
+          if (!findMemberAcc) {
+            return res
+              .status(404)
+              .json({ status: 404, message: "member not found." });
+          }res
+          return res
+            .status(200)
+            .json({ status: 200, message: "member deleted successfully." });
+       
+      } else {
+        return res
+          .status(404)
+          .json({ status: 404, message: "Invalid request" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+};
+
+const AllMemberProfile = async (req, res) => {
+  Authentication(req, res, async (user) => {
+    try {
+      
+      if (user.isAdmin) {
+        const findusers = await Member.find();
+        return res
+          .status(200)
+          .json({ status: 200, message: "All member's profile", data: findusers,total:findusers.length });
+      } else {
+        return res
+          .status(404)
+          .json({ status: 404, message: "user does not exist" });
+      }
+    } catch {
+      return res.status(500).json({ status: 500, message: "Internal error" });
+    }
+  });
+};
+
+
 module.exports = {
   MemberSignup,
   MemberSignin,
   MemberProfile,
   UpdateMemberProfile,
+  DeleteMember,AllMemberProfile
 };

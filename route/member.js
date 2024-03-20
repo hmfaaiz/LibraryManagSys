@@ -5,7 +5,7 @@ const {
     MemberSignup,
     MemberSignin,
     MemberProfile,
-    UpdateMemberProfile, }= require("../controller/member");
+    UpdateMemberProfile,DeleteMember,AllMemberProfile }= require("../controller/member");
 
   
 route.get("/", (req, res) => {
@@ -28,6 +28,18 @@ route.get("/", (req, res) => {
   route.put("/UpdateMemberProfile", (req, res) => {
     console.log("UpdateMemberProfile");
     UpdateMemberProfile(req, res);
+  });
+  
+  
+  route.delete("/DeleteMember", (req, res) => {
+    console.log("DeleteMember");
+    DeleteMember(req, res);
+  });
+  
+  //admin use
+  route.get("/AllMemberProfile", (req, res) => {
+    console.log("AllMemberProfile");
+    AllMemberProfile(req, res);
   });
   
  

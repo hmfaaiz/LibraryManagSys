@@ -6,6 +6,7 @@ const memberSchema = new mongoose.Schema(
     password: { type: String, required: true},
     email: { type: String, required: true },
     publication_date: {  type: Date, required: true,default:Date.now()},
+    isAdmin :{type: Boolean,default:false}
    
   },
 
