@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const {Authentication } = require("../security/authentication");
 const validator = require("validator");
-const Book = require("../model/Book");
+const Book = require("../model/book");
 
 
 //Book

@@ -193,7 +193,7 @@ const AllMemberProfile = async (req, res) => {
       } else {
         return res
           .status(404)
-          .json({ status: 404, message: "user does not exist" });
+          .json({ status: 404, message: "You are not allowed" });
       }
     } catch {
       return res.status(500).json({ status: 500, message: "Internal error" });

@@ -14,10 +14,10 @@ const borrowSchema = new mongoose.Schema(
     },
     borrow_date: {
       type: Date,
-      required: true,
+      default:Date.now(),
     },
     return_date: {
-      type: Date,
+      type: Date,default:null,
     },
   },
 

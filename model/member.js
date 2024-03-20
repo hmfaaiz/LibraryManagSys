@@ -5,9 +5,9 @@ const memberSchema = new mongoose.Schema(
     name: { type: String, required: true},
     password: { type: String, required: true},
     email: { type: String, required: true },
-    publication_date: {  type: Date, required: true,default:Date.now()},
+    membership_date: {  type: Date, required: true,default:Date.now()},
     isAdmin :{type: Boolean,default:false}
-   
+
   },
 
   { timestamps: true }
