@@ -2,7 +2,7 @@ const express = require("express");
 const route = express.Router();
 
 const {
-    ToBorrow, ToReturn,BorrowedByMember,CurrentBorrowed
+    ToBorrow, ToReturn,BorrowedByMember,CurrentBorrowed,MyBorrowedHistory
 } = require("../controller/borrow");
 
 route.get("/", (req, res) => {
@@ -26,6 +26,11 @@ route.get("/BorrowedByMember", (req, res) => {
 route.get("/CurrentBorrowed", (req, res) => {
   console.log("CurrentBorrowed");
   CurrentBorrowed(req, res);
+});
+
+route.get("/MyBorrowedHistory", (req, res) => {
+  console.log("MyBorrowedHistory");
+  MyBorrowedHistory(req, res);
 });
 
 

@@ -164,5 +164,30 @@ const CurrentBorrowed= async (req, res) => {
   });
 };
 
-module.exports = { ToBorrow, ToReturn,BorrowedByMember,CurrentBorrowed };
+
+const MyBorrowedHistory = async (req, res) => {
+  Authentication(req, res, async (user) => {
+    try {
+      
+
+        const findlist = await Borrow.find({member_id:user._id})
+        .populate({
+          path: 'member_id',
+          select: '_id name email' // Specify the fields you want to select from the 'member_id' document
+        })
+        .populate({
+          path: 'book_id',
+          select: '_id title ' // Specify the fields you want to select from the 'member_id' document
+        });
+        return res
+          .status(200)
+          .json({ status: 200, message: "My history", data: findlist,total:findlist.length });
+     
+    } catch {
+      return res.status(500).json({ status: 500, message: "Internal error" });
+    }
+  });
+};
+
+module.exports = { ToBorrow, ToReturn,BorrowedByMember,CurrentBorrowed ,MyBorrowedHistory};
 
