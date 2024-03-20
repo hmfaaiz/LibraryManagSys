@@ -163,7 +163,8 @@ const DeleteMember = (req, res) => {
             return res
               .status(404)
               .json({ status: 404, message: "member not found." });
-          }res
+          }
+          
           return res
             .status(200)
             .json({ status: 200, message: "member deleted successfully." });
